@@ -26,7 +26,7 @@ function App() {
     setRunTime(null);
     const start = Date.now();
     try {
-      const res = await axios.post("http://3.25.227.207:5000/run", { code, language });
+      const res = await axios.post("http://3.25.155.213:5000/run", { code, language });
       setRunTime(((Date.now() - start) / 1000).toFixed(2));
       if (res.data.error) setError(res.data.error);
       else setOutput(res.data.output);
