@@ -27,4 +27,5 @@ app.post("/run", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running"));
+// app.listen(5000, () => console.log("Server running"));
+app.listen(5000, "0.0.0.0", () => console.log("Server running"));
