@@ -1,15 +1,28 @@
 const { exec } = require("child_process");
 const fs = require("fs");
+const path = require("path");
+
+// container path
+const containerDir = "/runners";
+
+// host path (IMPORTANT)
+const hostDir = "/home/ubuntu/onlineCompiler/backend/runners";
 
 const runPython = (code) => {
   return new Promise((resolve, reject) => {
-    const fileName = "script.py";
-    fs.writeFileSync(fileName, code);
+    fs.mkdirSync(containerDir, { recursive: true });
 
-    // const command = `/usr/bin/docker run --rm -v ${process.cwd()}:/app python:3.9 python /app/${fileName}`;
-    const command = `docker run --rm -v ${process.cwd()}:/app python:3.9 python /app/${fileName}`;
+    const fileName = `script_${Date.now()}.py`;
+    const filePath = path.join(containerDir, fileName);
+
+    // file container ke andar banegi (mapped to host)
+    fs.writeFileSync(filePath, code);
+
+    const command = `docker run --rm -v ${hostDir}:/app -w /app python:3.9-slim python ${fileName}`;
 
     exec(command, (error, stdout, stderr) => {
+      fs.unlinkSync(filePath);
+
       if (error) return reject(stderr);
       resolve(stdout);
     });

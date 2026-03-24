@@ -1,16 +1,25 @@
-version: "3"
+version: "3.9"
 
 services:
   backend:
     build: ./backend
+    container_name: onlinecompiler_backend
     ports:
       - "5000:5000"
     volumes:
+      - ./backend:/app
+      - /home/ubuntu/onlineCompiler/backend/runners:/runners   # ✅ important
       - /var/run/docker.sock:/var/run/docker.sock
+    user: root
+    environment:
+      - NODE_ENV=production
 
   frontend:
     build: ./frontend/onlinecompiler
+    container_name: onlinecompiler_frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+    environment:
+      - REACT_APP_API_URL=http://backend:5000
